@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .add-button {
+            background-color: #28a745;
+            /* Green */
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+        }
+
+        .edit-button {
+            background-color: seagreen;
+            /* Button background color */
+            color: #fff;
+            /* Text color */
+            padding: 10px 15px;
+            /* Vertical and horizontal padding */
+            border: none;
+            /* Remove default border */
+            border-radius: 5px;
+            /* Rounded corners */
+            cursor: pointer;
+            /* Pointer cursor on hover */
+            font-size: 16px;
+            /* Font size */
+            transition: background-color 0.3s, transform 0.3s;
+            /* Smooth transition for background and transform */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Light shadow for depth */
+        }
+
+        .edit-button:hover {
+            background-color: #4caf50;
+            /* Darker green on hover */
+            transform: translateY(-2px);
+            /* Slightly lift button on hover */
+        }
+
+        .edit-button:active {
+            transform: translateY(0);
+            /* Reset lift on click */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            /* Slightly smaller shadow when clicked */
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            /* Red background color */
+            color: white;
+            /* Text color */
+            padding: 10px 15px;
+            /* Vertical and horizontal padding */
+            border: none;
+            /* Remove default border */
+            border-radius: 5px;
+            /* Rounded corners */
+            cursor: pointer;
+            /* Pointer cursor on hover */
+            font-size: 16px;
+            /* Font size */
+            transition: background-color 0.3s, transform 0.3s;
+            /* Smooth transition for background and transform */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Light shadow for depth */
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+            /* Darker red on hover */
+            transform: translateY(-2px);
+            /* Slightly lift button on hover */
+        }
+
+        .delete-button:active {
+            transform: translateY(0);
+            /* Reset lift on click */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            /* Slightly smaller shadow when clicked */
+        }
+
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .button-gap {
+            margin-right: 10px;
+            /* Adjust the value as needed */
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            /* Adjust the value as needed */
+        }
+
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent background */
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            /* Center the modal */
+            padding: 20px;
+            border-radius: 10px;
+            /* Rounded corners */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            /* Shadow for depth */
+            width: 90%;
+            /* Responsive width */
+            max-width: 500px;
+            /* Max width */
+            animation: fadeIn 0.3s;
+            /* Fade-in animation */
+        }
+
+        .body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent background */
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            /* Center the modal */
+            padding: 20px;
+            border-radius: 10px;
+            /* Rounded corners */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            /* Shadow for depth */
+            width: 90%;
+            /* Responsive width */
+            max-width: 500px;
+            /* Max width */
+            animation: fadeIn 0.3s;
+            /* Fade-in animation */
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        h2 {
+            margin-top: 0;
+            /* Remove top margin */
+            color: #333;
+            /* Darker color for headings */
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            /* Spacing for labels */
+            color: #555;
+            /* Slightly lighter color */
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            /* Full width inputs */
+            padding: 10px;
+            /* Padding for inputs */
+            margin-bottom: 15px;
+            /* Spacing below inputs */
+            border: 1px solid #ccc;
+            /* Border style */
+            border-radius: 5px;
+            /* Rounded corners */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            /* Inner shadow */
+        }
+
+        button[type="submit"] {
+            background-color: #28a745;
+            /* Green background */
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            /* Rounded corners */
+            cursor: pointer;
+            width: 100%;
+            /* Full width button */
+            font-size: 16px;
+            /* Font size */
+        }
+
+        button[type="submit"]:hover {
+            background-color: #218838;
+            /* Darker green on hover */
+        }
+
+        h2 {
+            margin-top: 0;
+            /* Remove top margin */
+            color: #333;
+            /* Darker color for headings */
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            /* Spacing for labels */
+            color: #555;
+            /* Slightly lighter color */
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            /* Full width inputs */
+            padding: 10px;
+            /* Padding for inputs */
+            margin-bottom: 15px;
+            /* Spacing below inputs */
+            border: 1px solid #ccc;
+            /* Border style */
+            border-radius: 5px;
+            /* Rounded corners */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            /* Inner shadow */
+        }
+
+        button[type="submit"] {
+            background-color: #28a745;
+            /* Green background */
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            /* Rounded corners */
+            cursor: pointer;
+            width: 100%;
+            /* Full width button */
+            font-size: 16px;
+            /* Font size */
+        }
+
+        button[type="submit"]:hover {
+            background-color: #218838;
+            /* Darker green on hover */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            /* Space between fields */
+        }
+
+        .form-container input {
+            padding: 10px;
+            margin: 5px;
+        }
+
+        .search-container {
+            margin-top: 2px;
+        }
+
+        #save-button {
+            background-color: #28a745;
+            /* Green background */
+            color: white;
+            /* White text */
+            border: none;
+            /* No border */
+            border-radius: 5px;
+            /* Rounded corners */
+            padding: 10px 20px;
+            /* Vertical and horizontal padding */
+            font-size: 16px;
+            /* Font size */
+            cursor: pointer;
+            /* Pointer cursor on hover */
+            transition: background-color 0.3s;
+            /* Smooth transition for hover effect */
+        }
+
+        #save-button:hover {
+            background-color: #218838;
+            /* Darker green on hover */
+        }
+
+        #save-button:focus {
+            outline: none;
+            /* Remove outline on focus */
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
+
+        #search {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 150px;
+            /* Adjust width as needed */
+        }
+
+        #search-button {
+            padding: 6px 10px;
+            margin-left: 5px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+
+        #search-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <h1>User Management</h1>
+        <h2>Users List</h2>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Search...">
+            <button id="search-button">Search</button>
+        </div>
+        <form id="addform" class="form-container">
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="tel" name="phone" placeholder="Phone" required>
+            <input type="text" name="address" placeholder="Address" required>
+            <button type="button" id="save-button">Save</button>
+        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="load-data">
+                <!-- Modal Structure -->
+                <!-- Modal Structure -->
+                <!-- Modal HTML -->
+                <div id="modal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2>Edit User</h2>
+                        <form id="editForm">
+                            <label for="edit-name">Name:</label>
+                            <input type="text" id="edit-name" name="name" required>
+
+                            <label for="edit-email">Email:</label>
+                            <input type="email" id="edit-email" name="email" required>
+
+                            <label for="edit-phone">Phone:</label>
+                            <input type="text" id="edit-phone" name="phone" required>
+
+                            <label for="edit-address">Address:</label>
+                            <input type="text" id="edit-address" name="address" required>
+
+                            <input type="hidden" id="edit-id" name="userId"> <!-- User ID field -->
+
+                            <button type="button" id="edit-submit">Update</button>
+                        </form>
+                    </div>
+                </div>
+
+
+
+
+                <!-- User rows will be dynamically inserted here -->
+            </tbody>
+        </table>
+        <!-- <button class="add-button" id="addUser">Add User</button> -->
+
+        <script type="text/javascript">
+            ///////////////////FETCH ALL DATA////////////////////////
+            $(document).ready(function () {
+                function loadTable() {
+                    $.ajax({
+                        url: 'http://localhost/api-fetchdata.php',
+                        type: "GET",
+                        // Ensure the response is treated as JSON
+                        success: function (data) {
+                            $("#load-data").empty(); // Clear existing rows
+                            if (data.status === false) {
+                                $("#load-data").append("<tr><td colspan='5'><h2>" + data.message + "</h2></td></tr>");
+                            } else {
+                                $.each(data, function (key, value) {
+                                    $("#load-data").append("<tr>"
+                                        + "<td>" + value.id + "</td>"
+
+                                        + "<td>" + value.name + "</td>"
+                                        + "<td>" + value.email + "</td>"
+                                        + "<td>" + value.phone + "</td>"
+                                        + "<td>" + value.address + "</td>"
+                                        + "<td class='button-container'>"
+                                        + "<button class='edit-button button-gap' data-id='" + value.id + "' data-name='" + value.name + "' data-email='" + value.email + "' data-phone='" + value.phone + "' data-address='" + value.address + "'>Edit</button>"
+
+                                        + "</td>"
+                                        + "<td>"
+                                        + "<button class='delete-button' data-eid='" + value.id + "'>Delete</button> "
+                                        + "</td>"
+                                        + "</tr>");
+                                });
+                            }
+                        },
+
+                    });
+                }
+                loadTable();
+
+                /////////////////// FORM DATA TO JSON DATA////////////////////
+                function jsondata(targetform) {
+                    var arr = $(targetform).serializeArray();
+                    var obj = {};
+                    for (var a = 0; a < arr.length; a++) {
+                        if (arr[a].value === "") {
+                            alert("Please fill out the field: " + arr[a].name); // Alert which field is empty
+                            return false;
+                        }
+                        obj[arr[a].name] = arr[a].value;
+                    }
+                    return JSON.stringify(obj);
+                }
+
+
+                // Simple alert for messages
+                function message(msg, status) {
+                    alert(msg);
+                }
+                ////////////// INSERT DATA ///////////
+
+                $("#save-button").on("click", function (e) {
+                    e.preventDefault();
+                    var jsonObj = jsondata("#addform");
+                    if (jsonObj == false) {
+                        alert("All Fields Are Required");
+                    } else {
+                        $.ajax({
+                            url: 'http://localhost/api-insert.php',
+                            type: "POST",
+                            data: jsonObj,
+                            success: function (data) {
+                                message(data.message, data.status);
+                                if (data.status == true) {
+                                    loadTable();
+                                    $("#addform").trigger("reset");
+                                }
+                            }
+                        });
+                    }
+
+                });
+
+
+
+
+
+                // Open modal on edit button click
+                $(document).on("click", ".edit-button", function () {
+                    $("#modal").show();
+                    var userId = $(this).data("id");
+                    var obj = { uid: userId };
+                    var myJSON = JSON.stringify(obj);
+                    $.ajax({
+                        url: 'http://localhost/api-fetchsingle.php',
+                        type: "POST",
+                        data: myJSON,
+                        success: function (data) {
+                            $("#edit-id").val(data.user.id);
+                            $("#edit-name").val(data.user.name);
+                            $("#edit-email").val(data.user.email);
+                            $("#edit-phone").val(data.user.phone);
+                            $("#edit-address").val(data.user.address);
+
+                            // Show the modal
+                            $("#modal").show();
+                        }
+                    });
+                });
+
+                $(document).on('click', '.close-button', function () {
+                    $("#modal").hide();
+
+
+                });
+
+                //////////////////// UPDATE MODAL ///////////////////
+
+                $("#edit-submit").on("click", function (e) {
+                    e.preventDefault();
+                    var jsonObj = jsondata("#editForm"); // Get JSON data
+
+                    if (jsonObj == false) {
+                        alert("All Fields Are Required");
+                    } else {
+                        console.log("Sending AJAX request with data: ", jsonObj); // Log the data being sent
+                        $.ajax({
+                            url: 'http://localhost/api-update.php',
+                            type: "POST",
+                            contentType: "application/json",
+                            data: jsonObj, // Assuming jsonObj is correctly formatted
+                            success: function (data) {
+                                console.log("Response from server: ", data);
+                                message(data.message, data.status);
+                                if (data.status === true) {
+                                    loadTable(); // Refresh the table
+                                    $("#modal").hide(); // Hide the modal
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.error("AJAX error: ", textStatus, errorThrown);
+                            }
+                        });
+
+                    }
+                });
+
+                $(document).on("click", ".delete-button", function () {
+                    if (confirm("Do You Really Want to Delete this record?")) {
+                        var userId = $(this).data("eid");
+                        var obj = { uid: userId };
+                        var myJSON = JSON.stringify(obj);
+                        var row = this;
+                        $.ajax({
+                            url: 'http://localhost/api-delete.php',
+                            type: "POST",
+                            data: myJSON,
+                            success: function (data) {
+                                message(data.message, data.status);
+                                if (data.status === true) {
+                                    $(row).closest("tr").fadeOut();
+                                }
+                            }
+                        });
+                    }
+                });
+
+                $("#search-button").on("click", function () {
+                    var search_term = $("#search").val();
+                    console.log("Search Term:", search_term);
+
+                    if (search_term.length === 0) {
+                        $("#load-data").html(""); // Clear previous results if input is empty
+                        return;
+                    }
+
+                    var requestUrl = 'http://localhost/api-search.php?search=' + encodeURIComponent(search_term);
+                    console.log("Request URL:", requestUrl);
+
+                    $("#load-data").html("<tr><td colspan='5'>Loading...</td></tr>");
+
+                    $.ajax({
+                        url: requestUrl,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            console.log("Response Data:", data);
+                            $("#load-data").html(""); // Clear previous results
+
+                            if (data.status === false) {
+                                $("#load-data").append("<tr><td colspan='5'><h2>" + data.message + "</h2></td></tr>");
+                            } else {
+                                $.each(data.data, function (key, value) {
+                                    console.log("Appending Data:", value);
+                                    $("#load-data").append("<tr>"
+                                        + "<td>" + value.id + "</td>"
+                                        + "<td>" + value.name + "</td>"
+                                        + "<td>" + value.email + "</td>"
+                                        + "<td>" + value.phone + "</td>"
+                                        + "<td>" + value.address + "</td>"
+                                        + "<td class='button-container'>"
+                                        + "<button class='edit-button button-gap' data-id='" + value.id + "'>Edit</button>"
+                                        + "</td>"
+                                        + "<td>"
+                                        + "<button class='delete-button' data-eid='" + value.id + "'>Delete</button> "
+                                        + "</td>"
+                                        + "</tr>");
+                                });
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error("AJAX error:", textStatus, errorThrown);
+                            $("#load-data").html("<tr><td colspan='5'><h2>An error occurred. Please try again.</h2></td></tr>");
+                        }
+                    });
+                });
+
+            });
+
+
+
+
+        </script>
+
+
+    </div>
+</body>
+
+</html>
